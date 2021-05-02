@@ -5,25 +5,22 @@ import { CardComponent } from './CardComponent'
 
 export const UsersComponent = () => {
     const dispatch = useDispatch();
-    const users = useSelector(state => state.users.usersInfo)
+    const users = useSelector(state => state.usersInfo.users);
+    const loading = useSelector(state => state.usersInfo.loading);
+    const error = useSelector(state => state.usersInfo.error);
 
     useEffect(() => {
-        dispatch(getUsers([{
-            id: 1,
-            name: 'Leanne Graham',
-            company: {
-                name: 'Romaguera-Crona',
-                catchPhrase: 'Multi-layerd client-server neural-net',
-            }
-        }]))
+        dispatch(getUsers())
     }, [dispatch]);
     
     return (
         <>
+            {loading && <p>Loading...</p>}
             {users.length > 0 && users.map((user) => (
                 <CardComponent user={user} key={user.id} />
             ))}
-            {users.length === 0 && <p>No users available!</p>}
+            {users.length === 0 && !loading && <p>No users available!</p>}
+            {error && !loading && <p>{error}</p>}
         </>
     )
 }
